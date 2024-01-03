@@ -1,3 +1,55 @@
+// #include<Arduino.h>
+// void printBinary64(uint64_t value) {
+//   for (int i = 63; i >= 0; --i) {
+//     Serial.print((value >> i) & 0x01);
+//   }
+//   Serial.println();
+// }
+
+// uint8_t reverseBits(uint8_t value) {
+//   uint8_t result = 0;
+//   for (int i = 0; i < 8; ++i) {
+//     result |= ((value >> i) & 0x01) << (7 - i);
+//   }
+//   return result;
+// }
+// void setup() {
+//   Serial.begin(115200);
+// }
+
+// void loop() {
+//   // Example 8-byte value
+//   uint64_t originalValue = 0b0000000000000000000000000000000000001111000011110000111100001111;
+//   Serial.print("Original Value: ");
+//   printBinary64(originalValue);
+
+//   uint64_t manipulatedValue = 0;
+//   uint64_t mask = 0xFF;
+//   bool reverse = false;  // Flag to determine if the bits should be reversed
+
+//   for (int shift = 0; shift < 64; shift += 8) {
+//     // Extract 8 bits (1 byte)
+//     uint8_t byteValue = (originalValue >> shift) & mask;
+
+//     // If the reverse flag is true, reverse the bits in the byte
+//     if (reverse) {
+//       byteValue = reverseBits(byteValue);
+//     }
+
+//     // Combine the byte into the manipulated value
+//     manipulatedValue |= (uint64_t)byteValue << shift;
+
+//     // Toggle the reverse flag for the next iteration
+//     reverse = !reverse;
+//   }
+
+//   Serial.print("Manipulated Value: ");
+//   printBinary64(manipulatedValue);
+// }
+
+
+
+
 // #include <Arduino.h>
 // #include <Adafruit_NeoPixel.h>
 
@@ -55,6 +107,9 @@
 //     }
 // }
 
+
+
+
 // #include <Adafruit_NeoPixel.h>
 
 // #define LED_PIN 11
@@ -63,44 +118,63 @@
 // Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 // void rainbowBasedOnBinaryValue(uint64_t value, int wait) {
-//   for (int group = 0; group < 64; group++) {  // 64 groups of 4 LEDs
-//     bool bitValue = (value >> group) & 1;  // Extract individual bit for each group of 4 LEDs
+//   // for (int group = 0; group < 64; group++) {  // 64 groups of 4 LEDs
+//   //   bool bitValue = (value >> group) & 1;  // Extract individual bit for each group of 4 LEDs
 
-//     if (bitValue) {
-//       long hueValue = (group * 65536 / 64) % 65536; // Calculate hue value for the rainbow effect based on the group
+//   //   if (bitValue) {
+//   //     long hueValue = (group * 65536 / 64) % 65536; // Calculate hue value for the rainbow effect based on the group
 
-//       // Address the corresponding 4 LEDs for the group
-//       int startIndex = group * 4;
-//       for (int i = 0; i < 4; i++) {
-//         strip.setPixelColor(startIndex + i, strip.gamma32(strip.ColorHSV(hueValue + i * 65536 / 4)));  // Apply rainbow cycle to each of the 4 LEDs in the group
-//       }
-//     } else {
-//       // If the bit is 0, turn off the LEDs in this group
-//       int startIndex = group * 4;
-//       for (int i = 0; i < 4; i++) {
-//         strip.setPixelColor(startIndex + i, 0);  // Turn off the LEDs
-//       }
-//     }
-//   }
+//   //     // Address the corresponding 4 LEDs for the group
+//   //     int startIndex = group * 4;
+//   //     for (int i = 0; i < 4; i++) {
+//   //       strip.setPixelColor(startIndex + i, strip.gamma32(strip.ColorHSV(hueValue + i * 65536 / 4)));  // Apply rainbow cycle to each of the 4 LEDs in the group
+//   //     }
+//   //   } else {
+//   //     // If the bit is 0, turn off the LEDs in this group
+//   //     int startIndex = group * 4;
+//   //     for (int i = 0; i < 4; i++) {
+//   //       strip.setPixelColor(startIndex + i, 0);  // Turn off the LEDs
+//   //     }
+//   //   }
+//   // }
 
-//   strip.show();
-//   delay(wait);
+//   // strip.show();
+//   // delay(wait);
+//   // Loop through each bit of the 64-bit value
+//      for(int i = 0; i < 64; i++) {
+//       // Check if the i-th bit is set
+//        if(value & (1ULL << i)) {
+//          // Set the corresponding 4 LEDs to green
+//          for(int j = 0; j < 4; j++) {
+//            int ledIndex = i * 4 + j;
+//            if(ledIndex < LED_COUNT) {
+//              strip.setPixelColor(ledIndex, 0, 255, 0);
+//            } 
+//          }
+//        }
+//      }
+
+//      strip.show();   // Send the updated pixel colors to the hardware.
+//      delay(wait);
 // }
 
 // void setup() {
 //   strip.begin();
-//   strip.setBrightness(10);
+//   strip.setBrightness(255);
 //   strip.clear();
 //   strip.show();
 // }
 
 // void loop() {
 //   // Example 64-bit binary value
-//   uint64_t value = 0b001010101010101010101010101010101010101010101010101010101010101ULL;
+//   uint64_t value = 0b0000000000000001010101010101010101010101010101010101010101010111ULL;
 // // #include <SPI.h>;
 
 //   rainbowBasedOnBinaryValue(value, 10);
 // }
+
+
+
 
 #include <Arduino.h>     //0b001010101010101010101010101010101010101010101010101010101010101ULL
 #include <SPI.h>
@@ -169,29 +243,82 @@ char scanKeypad()
   }
   return k;
 }
-// Rainbow cycle along whole strip. Pass delay time (in ms) between frames.
+
+void printBinary64(uint64_t value) {
+  for (int i = 63; i >= 0; --i) {
+    Serial.print((value >> i) & 0x01);
+  }
+  Serial.println();
+}
+
+uint8_t reverseBits(uint8_t value) {
+  uint8_t result = 0;
+  for (int i = 0; i < 8; ++i) {
+    result |= ((value >> i) & 0x01) << (7 - i);
+  }
+  return result;
+} 
+
 void rack_find_fun(uint64_t resVal)
 {
-  for (int group = 0; group < 64; group++) {  // 64 groups of 4 LEDs
-    bool bitValue = (resVal >> group) & 1;  // Extract individual bit for each group of 4 LEDs
+  uint64_t manipulatedValue = 0;
+  uint64_t mask = 0xFF;
+  bool reverse = false;  // Flag to determine if the bits should be reversed
 
-    if (bitValue) {
-      long hueValue = (group * 65536 / 64) % 65536; // Calculate hue value for the rainbow effect based on the group
+  for (int shift = 0; shift < 64; shift += 8) {
+    // Extract 8 bits (1 byte)
+    uint8_t byteValue = (resVal >> shift) & mask;
 
-      // Address the corresponding 4 LEDs for the group
-      int startIndex = group * 4;
-      for (int i = 0; i < 4; i++) {
-        strip.setPixelColor(startIndex + i, strip.gamma32(strip.ColorHSV(hueValue + i * 65536 / 4)));  // Apply rainbow cycle to each of the 4 LEDs in the group
-      }
-    } else {
-      // If the bit is 0, turn off the LEDs in this group
-      int startIndex = group * 4;
-      for (int i = 0; i < 4; i++) {
-        strip.setPixelColor(startIndex + i, 0);  // Turn off the LEDs
-      }
+    // If the reverse flag is true, reverse the bits in the byte
+    if (reverse) {
+      byteValue = reverseBits(byteValue);
     }
+
+    // Combine the byte into the manipulated value
+    manipulatedValue |= (uint64_t)byteValue << shift;
+
+    // Toggle the reverse flag for the next iteration
+    reverse = !reverse;
   }
-  strip.show();
+
+  Serial.print("Manipulated Value: ");
+  printBinary64(manipulatedValue);
+
+  // for (int group = 0; group < 64; group++) {  // 64 groups of 4 LEDs
+  //   bool bitValue = (manipulatedValue >> group) & 1;  // Extract individual bit for each group of 4 LEDs
+
+  //   if (bitValue) {
+  //     long hueValue = (group * 65536 / 64) % 65536; // Calculate hue value for the rainbow effect based on the group
+
+  //     // Address the corresponding 4 LEDs for the group
+  //     int startIndex = group * 4;
+  //     for (int i = 0; i < 4; i++) {
+  //       strip.setPixelColor(startIndex + i, strip.gamma32(strip.ColorHSV(hueValue + i * 65536 / 4)));  // Apply rainbow cycle to each of the 4 LEDs in the group
+  //     }
+  //   } else {
+  //     // If the bit is 0, turn off the LEDs in this group
+  //     int startIndex = group * 4;
+  //     for (int i = 0; i < 4; i++) {
+  //       strip.setPixelColor(startIndex + i, 0);  // Turn off the LEDs
+  //     }
+  //   }
+  // }
+  // strip.show();
+    // Loop through each bit of the 64-bit value
+     for(int i = 0; i < 64; i++) {
+      // Check if the i-th bit is set
+       if(manipulatedValue & (1ULL << i)) {
+         // Set the corresponding 4 LEDs to green
+         for(int j = 0; j < 4; j++) {
+           int ledIndex = i * 4 + j;
+           if(ledIndex < LED_COUNT) {
+             strip.setPixelColor(ledIndex, 0, 255, 0);
+           } 
+         }
+       }
+     }
+
+     strip.show();   // Send the updated pixel colors to the hardware.
   lcd.setCursor(0, 2);
   // Print a message to the LCD
   lcd.print("Press CLR/BCK to end");
@@ -380,7 +507,7 @@ void setup()
 {
   Serial.begin(115200);
   strip.begin();           // Initialize NeoPixel object
-  strip.setBrightness(10); // Set BRIGHTNESS to about 4% (max = 255)
+  strip.setBrightness(255); // Set BRIGHTNESS to about 4% (max = 255)
   strip.clear();           // Turn off all LEDs
   strip.show();            // Send the updated pixel colors to the hardware.
   SPI.begin();
