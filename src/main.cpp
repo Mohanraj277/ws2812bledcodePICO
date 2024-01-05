@@ -85,7 +85,7 @@
 //   }
 //   else if(cmd=="on")
 //   {
-//     uint64_t binaryValue = 0b0000000000000000000000000000000000000000000000000000000000111111ULL;
+//     uint64_t binaryValue = 0b1111111111111111111111111111111111111111111111111111111111111111ULL;
 
 //     // Loop through each bit of the 64-bit value
 //     for(int i = 0; i < 64; i++) {
@@ -167,7 +167,8 @@
 
 // void loop() {
 //   // Example 64-bit binary value
-//   uint64_t value = 0b0000000000000001010101010101010101010101010101010101010101010111ULL;
+//   uint64_t value = 0b0101010101010101010101010101010101010101010101010101010101010101ULL;
+
 // // #include <SPI.h>;
 
 //   rainbowBasedOnBinaryValue(value, 10);
