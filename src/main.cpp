@@ -1,183 +1,4 @@
-// #include<Arduino.h>
-// void printBinary64(uint64_t value) {
-//   for (int i = 63; i >= 0; --i) {
-//     Serial.print((value >> i) & 0x01);
-//   }
-//   Serial.println();
-// }
-
-// uint8_t reverseBits(uint8_t value) {
-//   uint8_t result = 0;
-//   for (int i = 0; i < 8; ++i) {
-//     result |= ((value >> i) & 0x01) << (7 - i);
-//   }
-//   return result;
-// }
-// void setup() {
-//   Serial.begin(115200);
-// }
-
-// void loop() {
-//   // Example 8-byte value
-//   uint64_t originalValue = 0b0000000000000000000000000000000000001111000011110000111100001111;
-//   Serial.print("Original Value: ");
-//   printBinary64(originalValue);
-
-//   uint64_t manipulatedValue = 0;
-//   uint64_t mask = 0xFF;
-//   bool reverse = false;  // Flag to determine if the bits should be reversed
-
-//   for (int shift = 0; shift < 64; shift += 8) {
-//     // Extract 8 bits (1 byte)
-//     uint8_t byteValue = (originalValue >> shift) & mask;
-
-//     // If the reverse flag is true, reverse the bits in the byte
-//     if (reverse) {
-//       byteValue = reverseBits(byteValue);
-//     }
-
-//     // Combine the byte into the manipulated value
-//     manipulatedValue |= (uint64_t)byteValue << shift;
-
-//     // Toggle the reverse flag for the next iteration
-//     reverse = !reverse;
-//   }
-
-//   Serial.print("Manipulated Value: ");
-//   printBinary64(manipulatedValue);
-// }
-
-
-
-
-// #include <Arduino.h>
-// #include <Adafruit_NeoPixel.h>
-
-// // Pin to use to send signals to WS2812B
-// #define LED_PIN 11
-
-// // Number of WS2812B LEDs attached to the Arduino
-// #define LED_COUNT 256
-// String cmd = "";
-// // Setting up the NeoPixel library
-// Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
-
-// void setup() {
-//   Serial.begin(115200);
-//   strip.begin();           // Initialize NeoPixel object
-//   strip.setBrightness(10); // Set BRIGHTNESS to about 4% (max = 255)
-//   strip.clear();           // Turn off all LEDs
-//   strip.show();            // Send the updated pixel colors to the hardware.
-// }
-
-// void loop() { 
-//   if (Serial.available()>=0)
-//   {
-//     Serial.print("in");
-//     cmd = Serial.readString();
-//     cmd.trim();
-//     Serial.print(cmd);
-//   }
-//   if(cmd=="off")
-//   {
-//     strip.clear();           // Turn off all LEDs
-//     strip.show();            // Send the updated pixel colors to the hardware.
-//   }
-//   else if(cmd=="on")
-//   {
-//     uint64_t binaryValue = 0b1111111111111111111111111111111111111111111111111111111111111111ULL;
-
-//     // Loop through each bit of the 64-bit value
-//     for(int i = 0; i < 64; i++) {
-//       // Check if the i-th bit is set
-//       if(binaryValue& (1ULL << i)) {
-//         // Set the corresponding 4 LEDs to green
-//         for(int j = 0; j < 4; j++) {
-//           int ledIndex = i * 4 + j;
-//           if(ledIndex < LED_COUNT) {
-//             strip.setPixelColor(ledIndex, 0, 255, 0);
-//           } 
-//         }
-//       }
-//     }
-
-//     strip.show();   // Send the updated pixel colors to the hardware.
-
-//     //delay(500); // Pause before next pass through loop
-//     }
-// }
-
-
-
-
-// #include <Adafruit_NeoPixel.h>
-
-// #define LED_PIN 11
-// #define LED_COUNT 256
-
-// Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
-
-// void rainbowBasedOnBinaryValue(uint64_t value, int wait) {
-//   // for (int group = 0; group < 64; group++) {  // 64 groups of 4 LEDs
-//   //   bool bitValue = (value >> group) & 1;  // Extract individual bit for each group of 4 LEDs
-
-//   //   if (bitValue) {
-//   //     long hueValue = (group * 65536 / 64) % 65536; // Calculate hue value for the rainbow effect based on the group
-
-//   //     // Address the corresponding 4 LEDs for the group
-//   //     int startIndex = group * 4;
-//   //     for (int i = 0; i < 4; i++) {
-//   //       strip.setPixelColor(startIndex + i, strip.gamma32(strip.ColorHSV(hueValue + i * 65536 / 4)));  // Apply rainbow cycle to each of the 4 LEDs in the group
-//   //     }
-//   //   } else {
-//   //     // If the bit is 0, turn off the LEDs in this group
-//   //     int startIndex = group * 4;
-//   //     for (int i = 0; i < 4; i++) {
-//   //       strip.setPixelColor(startIndex + i, 0);  // Turn off the LEDs
-//   //     }
-//   //   }
-//   // }
-
-//   // strip.show();
-//   // delay(wait);
-//   // Loop through each bit of the 64-bit value
-//      for(int i = 0; i < 64; i++) {
-//       // Check if the i-th bit is set
-//        if(value & (1ULL << i)) {
-//          // Set the corresponding 4 LEDs to green
-//          for(int j = 0; j < 4; j++) {
-//            int ledIndex = i * 4 + j;
-//            if(ledIndex < LED_COUNT) {
-//              strip.setPixelColor(ledIndex, 0, 255, 0);
-//            } 
-//          }
-//        }
-//      }
-
-//      strip.show();   // Send the updated pixel colors to the hardware.
-//      delay(wait);
-// }
-
-// void setup() {
-//   strip.begin();
-//   strip.setBrightness(255);
-//   strip.clear();
-//   strip.show();
-// }
-
-// void loop() {
-//   // Example 64-bit binary value
-//   uint64_t value = 0b0101010101010101010101010101010101010101010101010101010101010101ULL;
-
-// // #include <SPI.h>;
-
-//   rainbowBasedOnBinaryValue(value, 10);
-// }
-
-
-
-
-#include <Arduino.h>     //0b001010101010101010101010101010101010101010101010101010101010101ULL
+#include <Arduino.h>    
 #include <SPI.h>
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
@@ -187,13 +8,23 @@
 // constants for keypad
 #define ROWS 4
 #define COLS 4
+
 // Pin to use to send signals to WS2812B
 #define LED_PIN 11
+
 // Number of WS2812B LEDs attached to the Arduino
 #define LED_COUNT 256
-String cmd = "";
+
+String sendData;
 String CurrententeredNumber = ""; // Variable to store entering ID number
 String enteredNumber = "";        // Variable to store entered ID number
+
+volatile bool keypadflag = false;
+volatile bool timerFlag = false;
+volatile bool interruptFlag = false; 
+
+unsigned char count = 0;
+unsigned char val = 0;
 
 const char keys[ROWS][COLS] = {
     {'1', '2', '3', 'A'},
@@ -208,8 +39,9 @@ const char COL_PINS[COLS] = {12, 13, 14, 15}; // Change these values according t
 const int slaveSelectPin = 17; // You can choose any GPIO pin for SS/CS
 const int interruptPin = 20;   // GPIO pin to trigger interrupt
 
-volatile bool interruptFlag = false;
-String sendData;
+// Variables to store timer values
+unsigned long previousMillis = 0;   // will store last time LED was updated
+const long interval = 20000;         // interval at which to blink (milliseconds)
 
 // variable to store url
 String url = "https://erp.themaestro.in/webservice/getproductslocation?id=";
@@ -223,6 +55,7 @@ void handleInterrupt()
 {
   interruptFlag = true;
 }
+
 char scanKeypad()
 {
   char k = 0;
@@ -245,12 +78,12 @@ char scanKeypad()
   return k;
 }
 
-void printBinary64(uint64_t value) {
-  for (int i = 63; i >= 0; --i) {
-    Serial.print((value >> i) & 0x01);
-  }
-  Serial.println();
-}
+// void printBinary64(uint64_t value) {
+//   for (int i = 63; i >= 0; --i) {
+//     Serial.print((value >> i) & 0x01);
+//   }
+//   Serial.println();
+// }
 
 uint8_t reverseBits(uint8_t value) {
   uint8_t result = 0;
@@ -282,68 +115,38 @@ void rack_find_fun(uint64_t resVal)
     reverse = !reverse;
   }
 
-  Serial.print("Manipulated Value: ");
-  printBinary64(manipulatedValue);
+  // Serial.print("Manipulated Value: ");
+  // printBinary64(manipulatedValue);
 
-  // for (int group = 0; group < 64; group++) {  // 64 groups of 4 LEDs
-  //   bool bitValue = (manipulatedValue >> group) & 1;  // Extract individual bit for each group of 4 LEDs
-
-  //   if (bitValue) {
-  //     long hueValue = (group * 65536 / 64) % 65536; // Calculate hue value for the rainbow effect based on the group
-
-  //     // Address the corresponding 4 LEDs for the group
-  //     int startIndex = group * 4;
-  //     for (int i = 0; i < 4; i++) {
-  //       strip.setPixelColor(startIndex + i, strip.gamma32(strip.ColorHSV(hueValue + i * 65536 / 4)));  // Apply rainbow cycle to each of the 4 LEDs in the group
-  //     }
-  //   } else {
-  //     // If the bit is 0, turn off the LEDs in this group
-  //     int startIndex = group * 4;
-  //     for (int i = 0; i < 4; i++) {
-  //       strip.setPixelColor(startIndex + i, 0);  // Turn off the LEDs
-  //     }
-  //   }
-  // }
-  // strip.show();
-    // Loop through each bit of the 64-bit value
-     for(int i = 0; i < 64; i++) {
-      // Check if the i-th bit is set
-       if(manipulatedValue & (1ULL << i)) {
-         // Set the corresponding 4 LEDs to green
-         for(int j = 0; j < 4; j++) {
-           int ledIndex = i * 4 + j;
-           if(ledIndex < LED_COUNT) {
-             strip.setPixelColor(ledIndex, 0, 255, 0);
-           } 
-         }
-       }
-     }
-
-     strip.show();   // Send the updated pixel colors to the hardware.
-  lcd.setCursor(0, 2);
-  // Print a message to the LCD
-  lcd.print("Press CLR/BCK to end");
-  lcd.setCursor(0, 3);
-  lcd.print("Process");
+  // Loop through each bit of the 64-bit value
+  for(int i = 0; i < 64; i++) {
+    // Check if the i-th bit is set
+    if(manipulatedValue & (1ULL << i)) {
+      // Set the corresponding 4 LEDs to green
+      for(int j = 0; j < 4; j++) {
+        int ledIndex = i * 4 + j;
+        if(ledIndex < LED_COUNT) {
+          strip.setPixelColor(ledIndex, 255, 0, 0);
+        } 
+      }
+    }
+  }
+  strip.show();   // Send the updated pixel colors to the hardware.
 }
 
 int getArrayLength(String arr[])
 {
   int length = 0;
-  Serial.println("in getArrayLength");
   // Iterate through the array until you find the end (assuming the array is terminated with a sentinel value)
   while (arr[length] != "null" && arr[length] != NULL)
   {
-    Serial.println("in while");
     length++;
   }
-  Serial.println(length);
   return length;
 }
 
 void match_fun(String str[])
 {
-  Serial.println("in match function");
   // Initialize a 2D array to store positions
   String grid[8][8];
 
@@ -360,14 +163,14 @@ void match_fun(String str[])
   // Calculate the number of elements in the array
   int arrayLength = getArrayLength(str);
 
-  Serial.print("Number of elements in the array: ");
-  Serial.println(arrayLength);
+  // Serial.print("Number of elements in the array: ");
+  // Serial.println(arrayLength);
 
   // Initialize an array to store generated numbers for matched elements
   int matchedNumbers[arrayLength];
 
   // Match and generate numbers for matched elements
-  Serial.println("match starts");
+  //Serial.println("match starts");
   for (int i = 0; i < arrayLength; i++)
   {
     for (int row = 0; row < 8; row++)
@@ -378,10 +181,10 @@ void match_fun(String str[])
         {
           // Generate a number for the matched element
           int number = row * 8 + col + 1;
-          Serial.print("Match found: ");
-          Serial.print(str[i]);
-          Serial.print(" corresponds to number ");
-          Serial.println(number);
+          // Serial.print("Match found: ");
+          // Serial.print(str[i]);
+          // Serial.print(" corresponds to number ");
+          // Serial.println(number);
 
           // Store the generated number in the array
           matchedNumbers[i] = number;
@@ -390,13 +193,13 @@ void match_fun(String str[])
     }
   }
   // Print the array of generated numbers
-  Serial.print("Array of generated numbers for matched elements: ");
-  for (int i = 0; i < arrayLength; i++)
-  {
-    Serial.print(matchedNumbers[i]);
-    Serial.print(" ");
-  }
-  Serial.println();
+  // Serial.print("Array of generated numbers for matched elements: ");
+  // for (int i = 0; i < arrayLength; i++)
+  // {
+  //   Serial.print(matchedNumbers[i]);
+  //   Serial.print(" ");
+  // }
+  //Serial.println();
 
   // Create an 8-byte value
   uint64_t result = 0;
@@ -409,15 +212,15 @@ void match_fun(String str[])
       result |= (uint64_t(1) << (matchedNumbers[i] - 1));
     }
   }
-  uint64_t binaryValue = 0;
+  //uint64_t binaryValue = 0;
   // Print the 8-byte value in binary
-  Serial.print("8-byte value in binary: ");
-  for (int i = 63; i >= 0; i--)
-  {
-    binaryValue = (result >> i) & 1;
-    Serial.print(binaryValue);
-  }
-  Serial.println();
+  // Serial.print("8-byte value in binary: ");
+  // for (int i = 63; i >= 0; i--)
+  // {
+  //   binaryValue = (result >> i) & 1;
+  //   Serial.print(binaryValue);
+  // }
+  //Serial.println();
   rack_find_fun(result);
 }
 
@@ -454,11 +257,64 @@ void split_fun(String inputString)
   }
 
   // Print the tokens
-  for (int i = 0; i < tokenCount; i++)
-  {
-    Serial.println(tokens[i]);
-  }
+  // for (int i = 0; i < tokenCount; i++)
+  // {
+  //   Serial.println(tokens[i]);
+  // }
   match_fun(tokens);
+}
+
+void location_lcd_print(String location)
+{
+  // Calculate available space on the first line
+  int availableSpaceLine1 = 20 - 15; // 11 is the length of "Location : "
+  String resultString = "";
+
+  for (int i = 0; i < location.length(); i++) {
+    if (location[i] != ' ') {
+      resultString += location[i];
+    }
+  }
+  if (resultString.length() <= availableSpaceLine1) {
+    lcd.print(location);
+  } else {
+    // Print as much as can fit on the first line
+    lcd.print(resultString.substring(0, availableSpaceLine1));
+
+    // Check if remaining text fits on the second line
+    int availableSpaceLine2 = 20;
+    String remainingText = resultString.substring(availableSpaceLine1);
+    
+    if (remainingText.length() <= availableSpaceLine2) {
+      lcd.setCursor(0, 1);
+      lcd.print(remainingText);
+    } else {
+      // Print as much as can fit on the second line
+      lcd.setCursor(0, 1);
+      lcd.print(remainingText.substring(0, availableSpaceLine2));
+
+      // Print the remaining text on the third line
+      lcd.setCursor(0, 2);
+      lcd.print(remainingText.substring(availableSpaceLine2));
+      // Check if remaining text fits on the third line
+      int availableSpaceLine3 = 20;
+      String remainingTextLine3 = remainingText.substring(availableSpaceLine2);
+
+      if (remainingTextLine3.length() <= availableSpaceLine3) {
+        lcd.setCursor(0, 2);
+        lcd.print(remainingTextLine3);
+      } 
+      else {
+        // Print as much as can fit on the third line
+        lcd.setCursor(0, 2);
+        lcd.print(remainingTextLine3.substring(0, availableSpaceLine3));
+
+        // Print the remaining text on the fourth line
+        lcd.setCursor(0, 3);
+        lcd.print(remainingTextLine3.substring(availableSpaceLine3));
+      }
+    }
+  }
 }
 
 void Json_parse_fun(String jsonString)
@@ -470,8 +326,8 @@ void Json_parse_fun(String jsonString)
   // Check for parsing errors
   if (error)
   {
-    Serial.print(F("JSON parsing failed: "));
-    Serial.println(error.c_str());
+    // Serial.print(F("JSON parsing failed: "));
+    // Serial.println(error.c_str());
     return;
   }
   // Access parsed values
@@ -481,29 +337,76 @@ void Json_parse_fun(String jsonString)
   int noOfCells = doc["noOfCells"];
 
   // Use the parsed values as needed
-  Serial.print(F("status: "));
-  Serial.println(status);
-  Serial.print(F("msg: "));
-  Serial.println(msg);
-  Serial.print(F("locations: "));
-  Serial.println(location);
-  Serial.print(F("noOfCells: "));
-  Serial.println(noOfCells);
-  split_fun(location);
+  // Serial.print(F("status: "));
+  // Serial.println(status);
+  // Serial.print(F("msg: "));
+  // Serial.println(msg);
+  // Serial.print(F("locations: "));
+  // Serial.println(location);
+  // Serial.print(F("noOfCells: "));
+  // Serial.println(noOfCells);
+  if(msg == "Data not found")
+  {
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Location Not Found");
+    lcd.setCursor(0, 2);
+    lcd.print("Press CLR/BCK to end");
+    lcd.setCursor(0, 3);
+    lcd.print("Process");
+  }
+  else
+  {
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Location Found:");
+    location_lcd_print(location);
+    split_fun(location);
+  }
 }
 void urlSendfun(String idstr)
 {
   digitalWrite(slaveSelectPin, LOW);
   sendData = url + idstr;
-  Serial.println();
-  Serial.println(sendData);
+  //Serial.println();
+  //Serial.println(sendData);
   sendData += "    ";
   for (char c : sendData)
   {
     SPI.transfer(c);
   }
   digitalWrite(slaveSelectPin, HIGH);
+  count = 1;
 }
+
+int test_WiFi()
+{
+  while (interruptFlag != true)
+  {
+    delay(500);
+  }
+  interruptFlag = false;
+  digitalWrite(slaveSelectPin, LOW); // Select the slave
+  // Receive string data from the slave
+  String receivedData = "";
+  while (true)
+  {
+    char c = SPI.transfer(0); // Send dummy byte to receive data
+    if (c == '\0')
+    {
+      break; // Null character indicates the end of the string
+    }
+    receivedData += c;
+  }
+  digitalWrite(slaveSelectPin, HIGH); // Deselect the slave
+  //Serial.println("Received Data: " + receivedData);
+  if(receivedData=="WiFi connected")
+  {
+    return 1;
+  }
+  return 0;
+}
+
 void setup()
 {
   Serial.begin(115200);
@@ -534,6 +437,24 @@ void setup()
   lcd.clear();
   // Turn on the backlight (if available)
   lcd.backlight();
+  lcd.setCursor(1,0);
+  lcd.print("Maestro Technology");
+  lcd.setCursor(2,1);
+  lcd.print("Rack Identifier");
+  delay(2000);
+  lcd.clear();
+
+  lcd.setCursor(0,0);
+  lcd.print("Connecting to WiFi..");
+
+  if(test_WiFi())
+  {
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("WiFi Connected.");
+    delay(2000);
+  }
+  lcd.clear();
   lcd.setCursor(0, 0);
   // Print a message to the LCD
   lcd.print("Enter The Issue ID: ");
@@ -541,50 +462,104 @@ void setup()
 
 void loop()
 {
-  char key = scanKeypad();
+  char key;
+  unsigned long currentMillis = millis();  // get the current time
+  key = scanKeypad();
   delay(100); // Adjust the delay according to your needs
   if (key != 0)
   {
-    if (key == 'A')
+    if ((key == 'A') && (keypadflag == false))
     {
-      // If '#' key is pressed, clear the entered number
-      lcd.setCursor(0, 1); // Set cursor to the beginning of the 2nd row
-      lcd.print("                    ");
-      // count = 1;
       enteredNumber = CurrententeredNumber;
       CurrententeredNumber = "";
-      urlSendfun(enteredNumber);
+      if((enteredNumber=="")&&(keypadflag == false))
+      {
+        lcd.setCursor(2, 3); 
+        lcd.print("ID is not Valid");
+        delay(2000);
+        lcd.setCursor(0, 3); 
+        lcd.print("                    ");
+        keypadflag = false;
+      }
+      else{
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Processing.....");
+        keypadflag = true;
+        urlSendfun(enteredNumber);
+      }
     }
     else if(key=='D')
     {
+      CurrententeredNumber = "";
       strip.clear();           // Turn off all LEDs
       strip.show();            // Send the updated pixel colors to the hardware.
-      lcd.setCursor(0, 2);
-      // Print a message to the LCD
-      lcd.print("                    ");
-      lcd.setCursor(0, 3);
-      lcd.print("                    ");
-      delay(100);
-      lcd.setCursor(5, 2);
-      // Print a message to the LCD
+      lcd.clear();
+      lcd.setCursor(5, 1);
       lcd.print("Thank You");
-      delay(2000);
-       lcd.setCursor(0, 2);
-      // Print a message to the LCD
-      lcd.print("                    ");
+      delay(1000);
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Enter The Issue ID: ");
+      keypadflag = false;
+    }
+    else if(key == 'B')
+    {
+      if (CurrententeredNumber.length() > 0) {
+        // Remove the last character from the string
+        CurrententeredNumber.remove(CurrententeredNumber.length() - 1);
+        lcd.setCursor(0, 1);
+        lcd.print("                    ");
+        lcd.setCursor(8, 1); 
+        lcd.print(CurrententeredNumber);
+      }
     }
     else
     {
-      // Concatenate the pressed key to the entered number
-      CurrententeredNumber += key;
-      lcd.setCursor(8, 1); // Set cursor to the beginning of the 2nd row
-      lcd.print(CurrententeredNumber);
+      if(keypadflag == false)
+      {
+        // Concatenate the pressed key to the entered number
+        CurrententeredNumber += key;
+        lcd.setCursor(8, 1);
+        lcd.print(CurrententeredNumber);
+      }
     }
   }
-  
+  if(count == 1)
+  {
+    if(val==0)
+    {
+      previousMillis = currentMillis;
+      val=1;
+    }
+    // check if the desired interval has passed since the last blink
+    if (currentMillis - previousMillis >= interval) 
+    {
+      previousMillis = currentMillis;  // save the last time you blinked the LED
+      if(timerFlag == true)
+      {
+        timerFlag = false;
+      }
+      else{
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Process Timeout");
+        lcd.setCursor(0, 1);
+        lcd.print("Try again");
+        delay(2000);
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Enter The Issue ID: ");
+        keypadflag = false;
+        count=0;
+      }
+      val=0;
+    }
+  }
   if (interruptFlag)
   {
     interruptFlag = false;
+    timerFlag = true;
     digitalWrite(slaveSelectPin, LOW);
     for (char c : "")
     {
@@ -592,7 +567,7 @@ void loop()
     }
     digitalWrite(slaveSelectPin, HIGH);
     delay(100);
-    digitalWrite(slaveSelectPin, LOW); // Select the slave
+    digitalWrite(slaveSelectPin, LOW);      // Select the slave
     // Receive string data from the slave
     String receivedData = "";
     while (true)
@@ -605,7 +580,41 @@ void loop()
       receivedData += c;
     }
     digitalWrite(slaveSelectPin, HIGH); // Deselect the slave
-    Serial.println("Received Data: " + receivedData);
-    Json_parse_fun(receivedData);
+    //Serial.println("Received Data: " + receivedData);
+    if(receivedData=="WiFi not connected")
+    {
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("WiFi Not Connected..");
+      lcd.setCursor(0, 1);
+      lcd.print("Try again");
+      delay(2000);
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Enter The Issue ID: ");
+      keypadflag = false;
+      count = 0;
+    }
+    else if(receivedData=="Error on HTTP request")
+    {
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Error on HTTP");
+      lcd.setCursor(0, 1);
+      lcd.print("Request....");
+      lcd.setCursor(11, 1);
+      lcd.print("Try again");
+      delay(2000);
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Enter The Issue ID: ");
+      keypadflag = false;
+      count = 0;
+    }
+    else
+    {
+      count = 0;
+      Json_parse_fun(receivedData);
+    }
   }
 }
