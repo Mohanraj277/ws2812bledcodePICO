@@ -388,7 +388,7 @@ int test_WiFi()
   interruptFlag = false;
   digitalWrite(slaveSelectPin, LOW); // Select the slave
   // Receive string data from the slave
-  String receivedData = "";
+  String WiFiStatus = "";
   while (true)
   {
     char c = SPI.transfer(0); // Send dummy byte to receive data
@@ -396,11 +396,11 @@ int test_WiFi()
     {
       break; // Null character indicates the end of the string
     }
-    receivedData += c;
+    WiFiStatus += c;
   }
   digitalWrite(slaveSelectPin, HIGH); // Deselect the slave
   //Serial.println("Received Data: " + receivedData);
-  if(receivedData=="WiFi connected")
+  if(WiFiStatus == "WiFi connected")
   {
     return 1;
   }
@@ -532,27 +532,26 @@ void loop()
       previousMillis = currentMillis;
       val=1;
     }
+    if(timerFlag == true)
+    {
+        timerFlag = false;
+        val=0;
+    }
     // check if the desired interval has passed since the last blink
     if (currentMillis - previousMillis >= interval) 
     {
       previousMillis = currentMillis;  // save the last time you blinked the LED
-      if(timerFlag == true)
-      {
-        timerFlag = false;
-      }
-      else{
-        lcd.clear();
-        lcd.setCursor(0, 0);
-        lcd.print("Process Timeout");
-        lcd.setCursor(0, 1);
-        lcd.print("Try again");
-        delay(2000);
-        lcd.clear();
-        lcd.setCursor(0, 0);
-        lcd.print("Enter The Issue ID: ");
-        keypadflag = false;
-        count=0;
-      }
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Process Timeout");
+      lcd.setCursor(0, 1);
+      lcd.print("Try again");
+      delay(2000);
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Enter The Issue ID: ");
+      keypadflag = false;
+      count=0;
       val=0;
     }
   }
