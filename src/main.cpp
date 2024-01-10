@@ -535,7 +535,9 @@ void loop()
     if(timerFlag == true)
     {
         timerFlag = false;
+        keypadflag = false;
         val=0;
+        count=0;
     }
     // check if the desired interval has passed since the last blink
     if (currentMillis - previousMillis >= interval) 
